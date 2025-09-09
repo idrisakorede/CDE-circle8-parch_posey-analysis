@@ -9,7 +9,7 @@ CDE Circle 8 group project: SQL-based analysis of Parch Posey sales database wit
 
 ## Team Members
 - **[Idris Akorede Ibrahim]** - Sales Analysis            | GitHub: [@idrisakorede]
-- **[Member 2]** - Product analysis                       | GitHub: [@username]
+- **[Joseph Itopa Abubakar]** - Product analysis          | GitHub: [@josephitopa]
 - **[Member 3]** - Geographic Analysis                    | GitHub: [@username]
 - **[Member 4]** - Customer Analysis                      | GitHub: [@username]
 
