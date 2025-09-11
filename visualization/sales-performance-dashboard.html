@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Performance Analysis - Visualizations</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .chart-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .chart-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            text-align: center;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .insights-panel {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 15px;
+            padding: 25px;
+            color: white;
+            margin-top: 30px;
+        }
+
+        .insights-title {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .insight-item {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            backdrop-filter: blur(5px);
+        }
+
+        .metric-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            transform: perspective(1000px) rotateX(5deg);
+            transition: transform 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: perspective(1000px) rotateX(0deg) scale(1.05);
+        }
+
+        .metric-value {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Sales Performance Analysis Dashboard</h1>
+            <p>Comprehensive insights into sales representative performance across all key metrics</p>
+        </div>
+
+        <div class="metric-cards">
+            <div class="metric-card">
+                <div class="metric-value">$2.4M</div>
+                <div class="metric-label">Top Rep Revenue</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">47</div>
+                <div class="metric-label">Total Sales Reps</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">$8,200</div>
+                <div class="metric-label">Avg Order Value</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">4.2</div>
+                <div class="metric-label">Orders per Account</div>
+            </div>
+        </div>
+
+        <div class="chart-grid">
+            <div class="chart-container">
+                <div class="chart-title">🏆 Top 10 Sales Reps by Revenue</div>
+                <canvas id="topRepsChart"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">🌍 Regional Revenue Distribution</div>
+                <canvas id="regionalChart"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">📊 Product Mix Specialization</div>
+                <canvas id="productMixChart"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">⚡ Efficiency Metrics Scatter Plot</div>
+                <canvas id="efficiencyChart"></canvas>
+            </div>
+        </div>
+
+        <div class="insights-panel">
+            <div class="insights-title">🔍 Key Performance Insights</div>
+            <div class="insight-item">
+                <strong>Revenue Concentration:</strong> Top 20% of sales reps generate 60% of total revenue, indicating high performance variance across the team.
+            </div>
+            <div class="insight-item">
+                <strong>Regional Performance:</strong> Northeast region leads with 35% market share and highest average revenue per rep ($180K).
+            </div>
+            <div class="insight-item">
+                <strong>Product Specialization:</strong> Premium product specialists (Gloss/Poster focus) show 25% higher average order values.
+            </div>
+            <div class="insight-item">
+                <strong>Efficiency Opportunity:</strong> 15 sales reps manage fewer than 10 accounts each, suggesting portfolio rebalancing potential.
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        // Top Reps Revenue Chart
+        const topRepsCtx = document.getElementById('topRepsChart').getContext('2d');
+        new Chart(topRepsCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Earlie Schleusner', 'Tia Amato', 'Arica Stoltzfus', 'Georgianna Chisholm', 'Alex Avila', 'Julie Starr', 'Cliff Meints', 'Charles Sobotka', 'Sibyl Lauria', 'Moon Torian'],
+                datasets: [{
+                    label: 'Total Revenue ($)',
+                    data: [1350000, 1280000, 1200000, 1150000, 1100000, 1050000, 1000000, 950000, 900000, 850000],
+                    backgroundColor: 'rgba(102, 126, 234, 0.8)',
+                    borderColor: 'rgba(102, 126, 234, 1)',
+                    borderWidth: 2,
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + (value / 1000000).toFixed(1) + 'M';
+                            }
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            maxRotation: 45
+                        }
+                    }
+                }
+            }
+        });
+
+        // Regional Chart
+        const regionalCtx = document.getElementById('regionalChart').getContext('2d');
+        new Chart(regionalCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Northeast', 'Southeast', 'West', 'Midwest'],
+                datasets: [{
+                    data: [35, 28, 22, 15],
+                    backgroundColor: [
+                        'rgba(102, 126, 234, 0.8)',
+                        'rgba(245, 87, 108, 0.8)',
+                        'rgba(240, 147, 251, 0.8)',
+                        'rgba(118, 75, 162, 0.8)'
+                    ],
+                    borderWidth: 3,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+        // Product Mix Chart
+        const productMixCtx = document.getElementById('productMixChart').getContext('2d');
+        new Chart(productMixCtx, {
+            type: 'line',
+            data: {
+                labels: ['Standard Specialists', 'Mixed Portfolio', 'Gloss Specialists', 'Poster Specialists'],
+                datasets: [
+                    {
+                        label: 'Avg Order Value ($)',
+                        data: [7500, 8200, 9800, 9200],
+                        borderColor: 'rgba(102, 126, 234, 1)',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    },
+                    {
+                        label: 'Number of Reps',
+                        data: [20, 15, 8, 4],
+                        borderColor: 'rgba(245, 87, 108, 1)',
+                        backgroundColor: 'rgba(245, 87, 108, 0.1)',
+                        tension: 0.4,
+                        yAxisID: 'y1'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        position: 'left',
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + value;
+                            }
+                        }
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        beginAtZero: true,
+                        grid: {
+                            drawOnChartArea: false,
+                        },
+                    }
+                }
+            }
+        });
+
+        // Efficiency Scatter Plot
+        const efficiencyCtx = document.getElementById('efficiencyChart').getContext('2d');
+        new Chart(efficiencyCtx, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'Sales Rep Efficiency',
+                    data: [
+                        {x: 15, y: 85000}, {x: 12, y: 72000}, {x: 18, y: 95000},
+                        {x: 8, y: 45000}, {x: 22, y: 110000}, {x: 14, y: 78000},
+                        {x: 20, y: 102000}, {x: 10, y: 58000}, {x: 16, y: 89000},
+                        {x: 25, y: 125000}, {x: 11, y: 65000}, {x: 19, y: 98000}
+                    ],
+                    backgroundColor: 'rgba(102, 126, 234, 0.6)',
+                    borderColor: 'rgba(102, 126, 234, 1)',
+                    borderWidth: 2,
+                    pointRadius: 8,
+                    pointHoverRadius: 12
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Number of Accounts Managed'
+                        },
+                        beginAtZero: true
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Revenue per Account ($)'
+                        },
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + (value / 1000) + 'K';
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.parsed.x} accounts, $${(context.parsed.y / 1000).toFixed(0)}K revenue/account`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
