@@ -9,8 +9,8 @@ CDE Circle 8 group project: SQL-based analysis of Parch Posey sales database wit
 
 ## Team Members
 - **[Idris Akorede Ibrahim]** - Sales Analysis            | GitHub: [@idrisakorede]
-- **[Member 2]** - Product analysis                       | GitHub: [@username]
-- **[Member 3]** - Geographic Analysis                    | GitHub: [@username]
+- **[Member 2]** - Product analysis          | GitHub: [@username]
+- **[Joseph Itopa Abubakar]** - Geographic Analysis                    | GitHub: [@josephitopa]
 - **[Member 4]** - Customer Analysis                      | GitHub: [@username]
 
 
@@ -24,6 +24,5 @@ Analyze Parch & Posey sales data for business insights.
 - `presentation.pptx` - Final presentation
 
 ## Key Findings
-*[Updated as we progress]*
-
+The Northeast make the most sales by order and generates the most revenue.
 ```
